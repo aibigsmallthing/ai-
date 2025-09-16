@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 行銷文案生成器</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <main class="container mt-4">
+        <h1 class="text-center mb-4">AI 行銷文案生成器</h1>
+
+        <div class="row">
+            <!-- Input Column -->
+            <div class="col-lg-5">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title mb-3">輸入您的設定</h5>
+                        
+                        <div class="mb-3">
+                            <label for="apiKey" class="form-label">Gemini API Key</label>
+                            <input type="password" class="form-control" id="apiKey" placeholder="請輸入您的 API Key">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="platform" class="form-label">目標平台</label>
+                            <select class="form-select" id="platform">
+                                <option value="Instagram">Instagram</option>
+                                <option value="Facebook">Facebook</option>
+                                <option value="Threads">Threads</option>
+                                <option value="custom">自訂...</option>
+                            </select>
+                            <input type="text" class="form-control mt-2" id="customPlatform" style="display: none;" placeholder="請輸入自訂平台">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="targetAudience" class="form-label">目標受眾</label>
+                            <select class="form-select" id="targetAudience">
+                                <option value="一般大眾">一般大眾</option>
+                                <option value="年輕人">年輕人</option>
+                                <option value="學生">學生</option>
+                                <option value="上班族">上班族</option>
+                                <option value="家庭主婦">家庭主婦</option>
+                                <option value="銀髮族">銀髮族</option>
+                                <option value="custom">自訂...</option>
+                            </select>
+                            <input type="text" class="form-control mt-2" id="customAudience" style="display: none;" placeholder="請輸入自訂受眾">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">文案長度</label>
+                            <div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="length" id="lengthShort" value="短 (約 50 字)" checked>
+                                    <label class="form-check-label" for="lengthShort">短</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="length" id="lengthMedium" value="中 (約 150 字)">
+                                    <label class="form-check-label" for="lengthMedium">中</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="length" id="lengthLong" value="長 (約 300 字)">
+                                    <label class="form-check-label" for="lengthLong">長</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="length" id="lengthCustomRadio" value="custom">
+                                    <label class="form-check-label" for="lengthCustomRadio">自訂</label>
+                                </div>
+                            </div>
+                            <div class="mt-2" id="customLengthWrapper" style="display: none;">
+                                <input type="number" class="form-control" id="customLength" placeholder="請輸入字數" min="10">
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="tone" class="form-label">文案語氣</label>
+                            <select class="form-select" id="tone">
+                                <option value="專業">專業</option>
+                                <option value="有趣">有趣</option>
+                                <option value="親切">親切</option>
+                                <option value="說服性">說服性</option>
+                                <option value="興奮">興奮</option>
+                                <option value="custom">自訂...</option>
+                            </select>
+                            <input type="text" class="form-control mt-2" id="customTone" style="display: none;" placeholder="請輸入自訂語氣">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="keywords" class="form-label">包含的關鍵字</label>
+                            <textarea class="form-control" id="keywords" rows="2" placeholder="請輸入希望包含的關鍵字，以逗號分隔..."></textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="cta" class="form-label">行動呼籲 (CTA)</label>
+                            <select class="form-select" id="cta">
+                                <option value="">無</option>
+                                <option value="立即購買">立即購買</option>
+                                <option value="了解更多">了解更多</option>
+                                <option value="點擊連結">點擊連結</option>
+                                <option value="分享給朋友">分享給朋友</option>
+                                <option value="custom">自訂...</option>
+                            </select>
+                            <input type="text" class="form-control mt-2" id="customCta" style="display: none;" placeholder="請輸入自訂 CTA">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="customInput" class="form-label">客製化需求</label>
+                            <textarea class="form-control" id="customInput" rows="4" placeholder="請輸入產品資訊、活動內容或希望強調的重點..."></textarea>
+                        </div>
+
+                        <button id="generateBtn" class="btn btn-primary w-100">
+                            <span id="spinner" class="spinner-border spinner-border-sm" role="status" aria-hidden="true" style="display: none;"></span>
+                            生成文案
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Output Column -->
+            <div class="col-lg-7">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">生成結果</h5>
+                        <div id="output" class="p-3 rounded" style="min-height: 300px; white-space: pre-wrap;"></div>
+                        <button id="copyBtn" class="btn btn-secondary mt-3" style="display: none;">複製文案</button>
+                    </div>
+                </div>
+                <div class="card mt-4">
+                    <div class="card-body">
+                        <h5 class="card-title">歷史紀錄</h5>
+                        <ul id="history" class="list-group list-group-flush">
+                           <li class="list-group-item text-muted">暫無紀錄</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="../src/script.js"></script>
+</body>
+</html>
