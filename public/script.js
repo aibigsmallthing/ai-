@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const apiKeyInput = document.getElementById('apiKey');
     const platformSelect = document.getElementById('platform');
     const customPlatformInput = document.getElementById('customPlatform');
     const toneSelect = document.getElementById('tone');
@@ -19,7 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const customLengthWrapper = document.getElementById('customLengthWrapper');
     const customLengthInput = document.getElementById('customLength');
 
-    const API_ENDPOINT = 'http://localhost:3001/api/generate';
+    const API_ENDPOINT = '/api/generate'; // Use relative path for deployment
 
     // --- Functions ---
     function setOutputPlaceholder() {
@@ -75,7 +74,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- Initial Setup ---
-    apiKeyInput.value = localStorage.getItem('geminiApiKey') || '';
     let history = JSON.parse(localStorage.getItem('generationHistory')) || [];
     updateHistoryUI();
     setOutputPlaceholder(); // Set initial placeholder
@@ -108,13 +106,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     generateBtn.addEventListener('click', async () => {
-        const apiKey = apiKeyInput.value.trim();
-        if (!apiKey) {
-            alert('請輸入您的 Gemini API Key。');
-            return;
-        }
-        localStorage.setItem('geminiApiKey', apiKey);
-
         const getCustomValue = (select, input) => {
             return select.value === 'custom' ? input.value.trim() : select.value;
         };
@@ -147,7 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const requestBody = {
-            apiKey, platform, length, tone, targetAudience, keywords, cta,
+            platform, length, tone, targetAudience, keywords, cta,
             customInput: customInput.value
         };
 

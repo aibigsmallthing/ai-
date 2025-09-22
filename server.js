@@ -1,9 +1,10 @@
+require('dotenv').config();
 const express = require('express');
 const axios = require('axios');
 const cors = require('cors');
 
 const app = express();
-const port = 3001;
+const port = process.env.PORT || 3001;
 
 app.use(cors());
 app.use(express.json());
@@ -13,10 +14,11 @@ app.use(express.static('public'));
 const API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent";
 
 app.post('/api/generate', async (req, res) => {
-    const { apiKey, platform, length, tone, customInput, targetAudience, keywords, cta } = req.body;
+    const { platform, length, tone, customInput, targetAudience, keywords, cta } = req.body;
+    const apiKey = process.env.GEMINI_API_KEY;
 
     if (!apiKey) {
-        return res.status(400).json({ error: 'API key is required.' });
+        return res.status(500).json({ error: 'API key is not configured on the server.' });
     }
 
     let prompt = `
